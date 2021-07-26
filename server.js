@@ -13,6 +13,14 @@ You can use Apollo Server as:
 const typeDefs = require("./typeDefs");
 const resolvers = require("./resolvers");
 
+const mongoose = require("mongoose"); // Used to connect our server application to mongoDB Database
+require("dotenv").config(); // Used to connect our server application to mongoDB Database
+
+mongoose // Used to connect our server application to mongoDB Database
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
+  .then(() => console.log("DB connected!"))
+  .catch((err) => console.error(err));
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
