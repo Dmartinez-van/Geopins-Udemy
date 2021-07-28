@@ -24,6 +24,20 @@ mongoose // Used to connect our server application to mongoDB Database
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  // Destructor the request parameter to capture any headers that are sent to server
+  context: ({ req }) => {
+    let authToken = null;
+    try {
+      authToken = req.headers.authorization;
+      // if we do get an authToken (truthy)
+      if (authToken) {
+        // if true, we can either find or create a user
+        // first create function verify token, then function to get users google information
+      }
+    } catch (error) {
+      console.error(`Unable to authenticate user with token ${authToken}`);
+    }
+  },
 });
 
 server.listen().then(({ url }) => {
