@@ -12,6 +12,7 @@ You can use Apollo Server as:
 
 const typeDefs = require("./typeDefs");
 const resolvers = require("./resolvers");
+const { findOrCreateUser } = require("./controllers/userController");
 
 const mongoose = require("mongoose"); // Used to connect our server application to mongoDB Database
 require("dotenv").config(); // Used to connect our server application to mongoDB Database
@@ -25,13 +26,14 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   // Destructor the request parameter to capture any headers that are sent to server
-  context: ({ req }) => {
+  context: async ({ req }) => {
     let authToken = null;
     try {
       authToken = req.headers.authorization;
       // if we do get an authToken (truthy)
       if (authToken) {
-        // if true, we can either find or create a user
+        // if true, we can either find or create a user (in controllers folder)
+        await findOrCreateUser(authToken);
         // first create function verify token, then function to get users google information
       }
     } catch (error) {
