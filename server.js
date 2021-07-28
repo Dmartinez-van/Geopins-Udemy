@@ -28,17 +28,19 @@ const server = new ApolloServer({
   // Destructor the request parameter to capture any headers that are sent to server
   context: async ({ req }) => {
     let authToken = null;
+    let currentUser = null;
     try {
       authToken = req.headers.authorization;
       // if we do get an authToken (truthy)
       if (authToken) {
         // if true, we can either find or create a user (in controllers folder)
-        await findOrCreateUser(authToken);
+        currentUser = await findOrCreateUser(authToken);
         // first create function verify token, then function to get users google information
       }
     } catch (error) {
       console.error(`Unable to authenticate user with token ${authToken}`);
     }
+    return { currentUser };
   },
 });
 
