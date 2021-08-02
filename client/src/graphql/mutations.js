@@ -14,6 +14,15 @@ mutation($title: String!, $image: String!, $content: String!, $latitude: Float!,
     content
     latitude
     longitude
+    comments {
+      text
+      createdAt
+      author {
+        _id
+        name
+        picture
+      }
+    }
     author {
       _id
       name
