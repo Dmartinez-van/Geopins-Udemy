@@ -4,6 +4,9 @@ import { withStyles } from "@material-ui/core/styles";
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+
+import { useClient } from "../client";
+import { GET_PINS_QUERY } from "../graphql/queries";
 import PinIcon from "./PinIcon";
 import Context from "../context";
 import Blog from "./Blog";
@@ -15,13 +18,22 @@ const INITIAL_VIEWPORT = {
 };
 
 const Map = ({ classes }) => {
+  const client = useClient();
+  useEffect(() => {
+    getPins();
+  }, []);
+
   const { state, dispatch } = useContext(Context);
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [userPosition, setUserPostion] = useState(null);
-
   useEffect(() => {
     getUserPosition();
   }, []);
+
+  const getPins = async () => {
+    const { getPins } = await client.request(GET_PINS_QUERY);
+    dispatch({ type: "GET_PINS", payload: getPins });
+  };
 
   const getUserPosition = () => {
     //use built in function
@@ -89,6 +101,19 @@ const Map = ({ classes }) => {
             <PinIcon size={40} color="hotpink" />
           </Marker>
         )}
+
+        {/* Created Pins */}
+        {state.pins.map((pin) => (
+          <Marker
+            key={pin._id}
+            latitude={pin.latitude}
+            longitude={pin.longitude}
+            offsetLeft={-19}
+            offsetTop={-37}
+          >
+            <PinIcon size={40} color="darkblue" />
+          </Marker>
+        ))}
       </ReactMapGL>
 
       {/* Blog area to add pin Content */}
